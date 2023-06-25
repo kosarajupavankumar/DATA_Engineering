@@ -1,0 +1,105 @@
+-- command to show databases
+show databases ;
+
+-- command create database 
+create database noob_db;
+
+-- command to delete database
+drop database first_demo;
+
+-- command to get inside a database 
+use noob_db;
+
+-- command to create a table 
+CREATE TABLE if not EXISTS employee
+(
+	id INT,
+    emp_name varchar(20)
+);
+
+-- command to see the list of tables 
+SHOW TABLES;
+
+-- command to see the table definition 
+SHOW create table employee;
+
+-- command employee table with few more columns 
+CREATE TABLE if not EXISTS employee_v1
+(
+	id INT,
+    emp_name varchar(50),
+    salary DOUBLE,
+    hiring_date DATE
+);
+
+-- Syntax to insert data into the table 
+INSERT into employee_v1 values(1, 'Pavan', '1000','2023-09-15');
+
+-- This statement will fail 
+INSERT into employee_v1 values(1, 'Pavan', '2023-09-15');
+
+-- Syntax 2 insert data into the table 
+insert into employee_v1(salary, emp_name , id)
+values('15000', 'ravi', '2');
+
+-- command to insert multiple records into table 
+insert into employee_v1 values (3, 'Amit', 5000, '2021-10-28'),
+(4, 'Nithin', 6000, '2020-01-15'),
+(5, 'kajal', 8000, '2019-05-02')
+
+-- How to query or fetch the data from a table 
+select * from employee_v1;
+
+-- Example table for intergeity constraints 
+CREATE TABLE if not EXISTS employee_with_contraints
+(
+	emp_id INT,
+    emp_name varchar(20) NOT NULL,
+    salary DOUBLE,
+    hiring_date DATE DEFAULT '2021-01-01',
+    UNIQUE (emp_id),
+    CHECK(salary > 1000)
+);
+
+-- Example 1 for IC failure 
+-- Expection - column 'name' canot be null
+insert into employee_with_contraints values(1, null, 3000, '2021-11-20');
+
+-- Example 2 for IC failure 
+-- Expection - Dplicate entry '1' for key id
+insert into employee_with_contraints values(1, 'Pavan', 3000, '2021-11-20');
+
+-- Another correct records because unique can accept NULL as well 
+insert into employee_with_contraints values(null, 'Pavan', 3000, '2021-11-20');
+
+-- Example 3 for IC failure 
+-- Expection - Dplicate entry '1' for key id
+insert into employee_with_contraints values(null, 'Pavan', 3000, '2021-11-20');
+
+select * from employee_with_contraints;
+
+-- Example 4 for IC failure 
+-- Expection - Check constraint 'employee_with_contraints_chk_1' is violated.	0.00050 sec
+
+insert into employee_with_contraints values(2, 'Sundeep', 500, '2021-11-20');
+
+-- TEST IC for Default date
+insert into employee_with_contraints(emp_id,emp_name, salary) values(7,'Akhil', 3000);
+
+select * from employee_with_contraints;
+
+-- Example table for intergerity contrinsts 
+CREATE TABLE if not EXISTS employee_with_contraints_temp
+(
+	emp_id INT,
+    emp_name varchar(20) NOT NULL,
+    salary DOUBLE,
+    hiring_date DATE DEFAULT '2021-01-01',
+	constraint unique_emp_id UNIQUE (emp_id),
+    constraint salary_check CHECK(salary > 1000)
+);
+
+-- check the name of containst when it fails 
+-- Exception - check contraint 'salary_check' is violated.
+
+insert into employee_with_contraints_temp values (5, 'Amit', 500, '2023-10-24')
